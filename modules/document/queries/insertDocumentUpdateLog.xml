@@ -18,6 +18,5 @@
 		<column name="extra_vars" var="extra_vars" />
 		<column name="reason_update" var="reason_update" />
 		<column name="regdate" var="regdate" default="curdate()" />
-		<column name="is_admin" var="is_admin" />
 	</columns>
 </query>
