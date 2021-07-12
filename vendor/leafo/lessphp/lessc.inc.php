@@ -1271,11 +1271,23 @@ class lessc {
 	    return $darkColor;
 	}
 
-	protected function lib_luma($color) {
-	    $color = $this->coerceColor($color);
-	    return (0.2126 * $color[0] / 255) + (0.7152 * $color[1] / 255) + (0.0722 * $color[2] / 255);
-	}
+    private function toLuma($color) {
+        list(, $r, $g, $b) = $this->coerceColor($color);
 
+        $r = $r / 255;
+        $g = $g / 255;
+        $b = $b / 255;
+
+        $r = ($r <= 0.03928) ? $r / 12.92 : pow((($r + 0.055) / 1.055), 2.4);
+        $g = ($g <= 0.03928) ? $g / 12.92 : pow((($g + 0.055) / 1.055), 2.4);
+        $b = ($b <= 0.03928) ? $b / 12.92 : pow((($b + 0.055) / 1.055), 2.4);
+
+        return (0.2126 * $r) + (0.7152 * $g) + (0.0722 * $b);
+    }
+
+    protected function lib_luma($color) {
+        return array("number", round($this->toLuma($color) * 100, 8), "%");
+    }
 
 	public function assertColor($value, $error = "expected color value") {
 		$color = $this->coerceColor($value);
